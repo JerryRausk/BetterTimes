@@ -1,13 +1,37 @@
 # Vue 3 + TypeScript + Vite
 
+## Get started with vercel dev cli
 
-## Type Support For `.vue` Imports in TS
+Install vercel CLI
+```
+npm i -g vercel@latest
+```
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+Run project (with hot reload)
+```
+vercel dev
+```
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+## Use prisma (and prisma client in frontend)
+Generate new schemas
+```
+npx prisma generate
+```
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+Use prisma schema in frontend when fetching data
+```
+import type { NameOfTypeFromPrismaSchema } from "@prisma/client";
+
+const res = await fetch("/api/endpoint");
+const data: NameOfTypeFromPrismaSchema = await res.json();
+console.log(NameOfTypeFromPrismaSchema.NameOfProperty); // NameOfProperty is typesafe
+```
+
+Use prisma schema in backend when fetching from db
+```
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+const thingFromDB = prisma.NameOfTypeFromPrismaSchema.findUnique({where: {NameOfProperty: valueToFind}});
+return response.status(200).send(list);
+```
