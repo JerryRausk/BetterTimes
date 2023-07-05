@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bettertimes/blocs/blocs.dart';
+import '../onboarding/onboarding_screen.dart';
 import '/screens/screens.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -21,15 +22,13 @@ class SplashScreen extends StatelessWidget {
       onWillPop: () async => false,
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state.status == AuthStatus.unauthenticated) {
-            Timer(
-              Duration(seconds: 1),
-              () => Navigator.of(context).pushNamedAndRemoveUntil(
-                OnboardingScreen.routeName,
-                ModalRoute.withName('/onboarding'),
-              ),
-            );
-          } else if (state.status == AuthStatus.authenticated) {}
+          Timer(
+            Duration(seconds: 1),
+            () => Navigator.of(context).pushNamedAndRemoveUntil(
+              OnboardingScreen.routeName,
+              ModalRoute.withName('/onboarding'),
+            ),
+          );
         },
         child: Scaffold(
           body: Container(
@@ -43,7 +42,7 @@ class SplashScreen extends StatelessWidget {
                   // ),
                   SizedBox(height: 20),
                   Text(
-                    'Memorize',
+                    'Better Times',
                     style: Theme.of(context).textTheme.headline1,
                   )
                 ],

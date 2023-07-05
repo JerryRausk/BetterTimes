@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
+import '../onboarding/onboarding_screen.dart';
 import '/blocs/blocs.dart';
 import '/cubits/cubits.dart';
 import '/screens/screens.dart';
