@@ -12,7 +12,9 @@ datasource db {
 }
 
 model User {
-  id  Int @id @default(autoincrement())
-  email  String
-  created DateTime
+  id      Int       @id @default(autoincrement())
+  email   String    @db.VarChar(256) @unique
+  created DateTime  @default(now())
+
+  @@index([email])
 }

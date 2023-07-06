@@ -1,25 +1,16 @@
 <template>
-  <div class="wrapper">
-    <div class="side-nav">
-      <ul>
-        <li>
-          Användare
-        </li>
-        <li>
-          Organisation
-        </li>
-        <li>
-          Tidkoder
-        </li>
-      </ul>
-    </div>
-    <div class="main">
-      Main content goes here
-    </div>
+  <h2 v-if="auth.currentUser">Gz du är inloggad och kunde komma hit.</h2>
+  <div v-else>
+    <h2>Oops</h2>
+    <h4>Vänligen logga in innan du gör något här.</h4>
+    <button @click="router.push({name: 'Login'})">Logga in</button>
   </div>
 </template>
 <script setup lang="ts">
-
+import { useRouter } from "vue-router";
+import { useFirebaseAuth } from 'vuefire';
+const auth = useFirebaseAuth()!;
+const router = useRouter();
 </script>
 
 <style scoped>

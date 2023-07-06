@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@prisma/client": "^4.16.2",
+    "firebase": "^9.23.0",
     "pinia": "^2.1.4",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.3"
+    "vue-router": "^4.2.3",
+    "vuefire": "^3.1.0"
   },
   "devDependencies": {
     "@vercel/node": "^2.15.3",

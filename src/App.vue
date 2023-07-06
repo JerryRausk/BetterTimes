@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { useUserStore } from "@/stores/userStore";
+import { signOut } from "firebase/auth";
 import { RouterLink, RouterView } from "vue-router";
+import { useCurrentUser, useFirebaseAuth } from "vuefire";
 
-const store = useUserStore();
+const currentUser = useCurrentUser();
+const auth = useFirebaseAuth()!;
 </script>
 
 <template>
@@ -13,13 +15,13 @@ const store = useUserStore();
           <router-link :to="{ name: 'Landing' }">Start</router-link>
         </li>
         <li>
-          <router-link v-if="store.isLoggedIn" :to="{ name: 'Admin' }">Admin</router-link>
+          <router-link v-if="currentUser" :to="{ name: 'Admin' }">Admin</router-link>
         </li>
       </ul>
       <ul>
         <li>
-          <router-link v-if="!store.isLoggedIn" :to="{ name: 'Login' }">Logga in</router-link>
-          <a href="#" v-else @click="store.isLoggedIn = false">Logga ut</a>
+          <router-link v-if="!currentUser" :to="{ name: 'Login' }">Logga in</router-link>
+          <a href="#" v-else @click="signOut(auth)">Logga ut {{ currentUser.email }}</a>
         </li>
       </ul>
     </nav>
@@ -48,16 +50,5 @@ nav {
   left: 0px;
   width: 100%;
   justify-content: space-between;
-  background-color: gray;
-}
-.router-view-wrapper {
-  width: 100%;
-  height: 100%;
-  background-color: purple;
-}
-.app {
-  height: 100%;
-  width: 100%;
-  display: block;
 }
 </style>

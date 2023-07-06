@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 export const useUserStore = defineStore("userStore", () => {
- const isLoggedIn = ref(false);
+ const someValue = ref(false);
 
  return {
-  isLoggedIn
+  someValue
 };
 })
