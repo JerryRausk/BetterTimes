@@ -13,12 +13,23 @@ vercel dev
 ```
 
 ## Use prisma (and prisma client in frontend)
-Generate new schemas
+### Generate new client schemas from definitions in prisma/schema.prisma
 ```
 npx prisma generate
 ```
 
-Use prisma schema in frontend when fetching data
+### Connect to DB
+#### Add a .env file that contains DATABASE_URL
+``` env
+DATABASE_URL='mysql://USERNAME:PASSWORD@SERVER_NAME/DB_NAME'
+```
+
+#### Push current state of models to db
+```
+npx prisma db push
+```
+
+### Use prisma schema in frontend when fetching data
 ```
 import type { NameOfTypeFromPrismaSchema } from "@prisma/client";
 
@@ -27,7 +38,7 @@ const data: NameOfTypeFromPrismaSchema = await res.json();
 console.log(NameOfTypeFromPrismaSchema.NameOfProperty); // NameOfProperty is typesafe
 ```
 
-Use prisma schema in backend when fetching from db
+### Use prisma schema in backend when fetching from db
 ```
 import { PrismaClient } from "@prisma/client";
 
@@ -35,3 +46,4 @@ const prisma = new PrismaClient();
 const thingFromDB = prisma.NameOfTypeFromPrismaSchema.findUnique({where: {NameOfProperty: valueToFind}});
 return response.status(200).send(list);
 ```
+

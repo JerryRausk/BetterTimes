@@ -6,23 +6,28 @@ const store = useUserStore();
 </script>
 
 <template>
-  <nav>
-    <ul>
-      <li>
-        <router-link :to="{name: 'Landing'}">Start</router-link>
-      </li>
-      <li>
-        <router-link v-if="store.isLoggedIn" :to="{name: 'Admin'}">Admin</router-link>
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <router-link v-if="!store.isLoggedIn" :to="{name: 'Login'}">Logga in</router-link>
-        <a href="#" v-else @click="store.isLoggedIn = false">Logga ut</a>
-      </li>
-    </ul>
-  </nav> 
-  <router-view />
+  <div class="app">
+    <nav>
+      <ul>
+        <li>
+          <router-link :to="{ name: 'Landing' }">Start</router-link>
+        </li>
+        <li>
+          <router-link v-if="store.isLoggedIn" :to="{ name: 'Admin' }">Admin</router-link>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <router-link v-if="!store.isLoggedIn" :to="{ name: 'Login' }">Logga in</router-link>
+          <a href="#" v-else @click="store.isLoggedIn = false">Logga ut</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="router-view-wrapper">
+      <router-view />
+    </div>
+    
+  </div>
 </template>
 
 <style scoped>
@@ -43,5 +48,16 @@ nav {
   left: 0px;
   width: 100%;
   justify-content: space-between;
+  background-color: gray;
+}
+.router-view-wrapper {
+  width: 100%;
+  height: 100%;
+  background-color: purple;
+}
+.app {
+  height: 100%;
+  width: 100%;
+  display: block;
 }
 </style>
