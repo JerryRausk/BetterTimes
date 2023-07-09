@@ -21,7 +21,7 @@ const verifyToken = async () => {
     return;
   }
   const idToken = await currentUser.getIdToken(true);
-  console.log(HttpService.get("/api/updateUser", {"app-id-token": idToken}));
+  await HttpService.get("/api/updateUser", {"app-id-token": idToken});
 }
 </script>
 

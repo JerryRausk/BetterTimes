@@ -25,12 +25,9 @@ async function createUser() {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      console.log("user created at gcp");
       HttpService.post("/api/newUser", {userEmail: user.email}).then(() => {
-        console.log("user created in db")
         router.push({ name: "Landing" });
       }).catch(() => {
-        console.error("we failed to push to DB, deleting user from gcp");
         deleteUser(user);
       });
     })
@@ -47,10 +44,8 @@ async function signInToFirebase() {
     userInput.value.email,
     userInput.value.password
   )
-    .then((userCredential) => {
+    .then(() => {
       // Signed in
-      const user = userCredential.user;
-      console.log(user);
       router.push({ name: "Landing" });
     })
     .catch((error) => {
@@ -66,9 +61,9 @@ async function signInToFirebase() {
     <h1>Sign In</h1>
     <div class="sign-in-form">
       <form>
-        <input v-model="userInput.email" type="email" label="Email" required
-          placeholder="eleanorshellstrop@thegoodplace.com" />
-        <input v-model="userInput.password" label="Password" type="password" required />
+        <input v-model="userInput.email" type="email" label="Email" required autocomplete="email"
+          placeholder="Jane.Doe@mail.com" />
+        <input v-model="userInput.password" label="Password" type="password" required autocomplete="current-password" />
       </form>
 
       <button @click="signInToFirebase" style="background-color:rgb(67, 182, 67)">
