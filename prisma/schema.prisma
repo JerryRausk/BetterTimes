@@ -8,10 +8,50 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-model Thing {
-  id  Int @id @default(autoincrement())
-  name  String
-  createdDate DateTime
+model User {
+  id      Int       @id @default(autoincrement())
+  email   String    @db.VarChar(256) @unique
+  created DateTime  @default(now())
+  organizations OrganizationUser[]
+  dailyReports DailyReport[]
+  @@index([email])
+}
+
+model Organization {
+  id  Int   @id @default(autoincrement())
+  name  String  @db.VarChar(256)
+  users OrganizationUser[]
+}
+
+model OrganizationUser {
+  userId Int
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId Int
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@id([userId, organizationId])
+  @@index([userId])
+  @@index([organizationId])
+}
+
+model TimeCode {
+  id Int @id @default(autoincrement())
+  name String
+  dailyReports DailyReport[]
+}
+
+model DailyReport {
+  userId Int
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date DateTime @db.Date
+  hours Float
+  timeCodeId Int
+  timeCode TimeCode @relation(fields: [timeCodeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, date])
+  @@index([userId, date])
+  @@index([timeCodeId])
 }

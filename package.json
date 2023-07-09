@@ -2,15 +2,20 @@
   "name": "bettertimes",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^4.16.2",
-    "vue": "^3.3.4"
+    "firebase": "^9.23.0",
+    "firebase-admin": "^11.9.0",
+    "pinia": "^2.1.4",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.3",
+    "vuefire": "^3.1.0"
   },
   "devDependencies": {
     "@vercel/node": "^2.15.3",
