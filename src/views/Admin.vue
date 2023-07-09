@@ -5,12 +5,24 @@
     <h4>Vänligen logga in innan du gör något här.</h4>
     <button @click="router.push({name: 'Login'})">Logga in</button>
   </div>
+  <button @click="verifyToken">Verfiera min token</button>
 </template>
 <script setup lang="ts">
+import { HttpService } from "@/services/httpService";
 import { useRouter } from "vue-router";
 import { useFirebaseAuth } from 'vuefire';
 const auth = useFirebaseAuth()!;
 const router = useRouter();
+
+const verifyToken = async () => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    console.error("User is not signed in.");
+    return;
+  }
+  const idToken = await currentUser.getIdToken(true);
+  console.log(HttpService.get("/api/updateUser", {"app-id-token": idToken}));
+}
 </script>
 
 <style scoped>

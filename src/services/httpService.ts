@@ -1,7 +1,7 @@
 export class HttpService {
-  static async get<T>(endpoint: string): Promise<T> {
+  static async get<T>(endpoint: string, headers: Record<string, string> = {}): Promise<T> {
     try {
-      const response = await fetch(endpoint);
+      const response = await fetch(endpoint, {headers});
       
       if (!response.ok) {
         throw new Error('Network response was not ok');
