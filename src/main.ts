@@ -1,20 +1,44 @@
 import { firebaseApp } from '@/firebase';
-import Admin from "@/views/Admin.vue";
 import Home from "@/views/Home.vue";
 import Landing from "@/views/Landing.vue";
 import Login from "@/views/Login.vue";
+import Report from "@/views/Report.vue";
+import User from "@/views/User.vue";
+import TimeCodes from "@/views/orgAdmin/TimeCodes.vue";
+import '@mdi/font/css/materialdesignicons.css';
 import { createPinia } from "pinia";
 import { createApp } from "vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 import { VueFire, VueFireAuth } from 'vuefire';
 import App from "./App.vue";
-import "./style.css";
+
+// Vuetify
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+import { aliases, mdi } from "vuetify/iconsets/mdi";
+import 'vuetify/styles';
+
+const vuetify = createVuetify({
+  theme: {defaultTheme: "dark"},
+  components,
+  directives,
+  icons: {
+    defaultSet: "mdi",
+    aliases,
+    sets: {
+      mdi
+    }
+  }
+})
 
 const routes = [
   {name: "Landing", path: "/", component: Landing},
-  {name: "Admin", path: "/admin", component: Admin},
+  {name: "TimeCodes", path: "/admin/timecodes", component: TimeCodes},
   {name: "Home", path: "/home", component: Home},
   {name: "Login", path: "/login", component: Login},
+  {name: "Report", path: "/report", component: Report},
+  {name: "User", path: "/me", component: User}
 ];
 
 const router = createRouter({
@@ -31,4 +55,5 @@ app.use(VueFire, {
 });
 app.use(router);
 app.use(pinia);
+app.use(vuetify);
 app.mount("#app");

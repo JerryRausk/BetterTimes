@@ -6,50 +6,67 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model User {
-  id      Int       @id @default(autoincrement())
-  email   String    @db.VarChar(256) @unique
-  created DateTime  @default(now())
-  organizations OrganizationUser[]
-  dailyReports DailyReport[]
+  id               Int                @id @default(autoincrement())
+  email            String             @unique @db.VarChar(256)
+  created          DateTime           @default(now())
+  firstName        String?
+  lastName         String?
+  role             String?
+  organizationId   Int                @default(2) // Demo organisation
+  organization     Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  dailyReports     DailyReport[]
+  OrganizationRole OrganizationRole[]
+
   @@index([email])
-}
-
-model Organization {
-  id  Int   @id @default(autoincrement())
-  name  String  @db.VarChar(256)
-  users OrganizationUser[]
-}
-
-model OrganizationUser {
-  userId Int
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  organizationId Int
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-
-  @@id([userId, organizationId])
-  @@index([userId])
   @@index([organizationId])
 }
 
+model Organization {
+  id               Int                @id @default(autoincrement())
+  name             String             @db.VarChar(256)
+  users            User[]
+  timeCodes        TimeCode[]
+  OrganizationRole OrganizationRole[]
+}
+
+model OrganizationRole {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId Int
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  role           Int // 1 = SuperAdmin, 2 = User
+
+  @@index([organizationId])
+  @@index([userId])
+}
+
 model TimeCode {
-  id Int @id @default(autoincrement())
-  name String
-  dailyReports DailyReport[]
+  id             Int           @id @default(autoincrement())
+  code           Int
+  name           String?
+  description    String?
+  dailyReports   DailyReport[]
+  organizationId Int
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([code])
 }
 
 model DailyReport {
-  userId Int
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  date DateTime @db.Date
-  hours Float
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date       DateTime @db.Date
+  hours      Float
   timeCodeId Int
-  timeCode TimeCode @relation(fields: [timeCodeId], references: [id], onDelete: Cascade)
+  timeCode   TimeCode @relation(fields: [timeCodeId], references: [id], onDelete: Cascade)
 
   @@id([userId, date])
   @@index([userId, date])

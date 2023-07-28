@@ -25,7 +25,7 @@ async function createUser() {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      HttpService.post("/api/newUser", {userEmail: user.email}).then(() => {
+      HttpService.post("/api/registerIndependentUser", { userEmail: user.email }).then(() => {
         router.push({ name: "Landing" });
       }).catch(() => {
         deleteUser(user);
@@ -57,46 +57,26 @@ async function signInToFirebase() {
 </script>
 
 <template>
-  <div class="sign-in-wrapper">
-    <h1>Sign In</h1>
-    <div class="sign-in-form">
-      <form>
-        <input v-model="userInput.email" type="email" label="Email" required autocomplete="email"
-          placeholder="Jane.Doe@mail.com" />
-        <input v-model="userInput.password" label="Password" type="password" required autocomplete="current-password" />
-      </form>
+  <h1>Sign In</h1>
+  <v-responsive class="mx-auto" max-width="344">
+    <v-form v-on:submit.prevent="signInToFirebase" class="mt-4">
+      <v-text-field clearable variant="outlined" v-model="userInput.email" type="email" label="Email" required
+        autocomplete="email" placeholder="Jane.Doe@mail.com" />
+      <v-text-field clearable variant="outlined" v-model="userInput.password" label="Password" type="password" required
+        autocomplete="current-password" />
+      <v-card-actions class="flex-column">
+        <v-btn type="submit" color="success">
+          Logga in
+          <v-icon icon="mdi-chevron-right" end></v-icon>
+        </v-btn>
+        <v-btn color="secondary" @click="createUser">
+          Registrera ny användare
+        </v-btn>
+      </v-card-actions>
+    </v-form>
 
-      <button @click="signInToFirebase" style="background-color:rgb(67, 182, 67)">
-        Sign In
-      </button>
-      <button @click="createUser" style="background-color: rgb(56, 56, 255);">
-        Create New User
-      </button>
-    </div>
-  </div>
+
+  </v-responsive>
 </template>
 
-<style scoped>
-.sign-in-form {
-  display:flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-form > input {
-  height: 1.5rem;
-}
-form > input:focus-visible {
-  outline-style: solid;
-  outline-width: 0.5px;
-  outline-color: rgb(187, 186, 186);
-}
-
-.sign-in-wrapper {
-  width: 16rem;
-}
-</style>
+<style scoped></style>

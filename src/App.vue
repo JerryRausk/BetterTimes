@@ -1,54 +1,67 @@
 <script setup lang="ts">
 import { signOut } from "firebase/auth";
-import { RouterLink, RouterView } from "vue-router";
+import { useRouter } from "vue-router";
 import { useCurrentUser, useFirebaseAuth } from "vuefire";
 
 const currentUser = useCurrentUser();
 const auth = useFirebaseAuth()!;
+const router = useRouter();
+
+const handleSignOut = async () => {
+  await signOut(auth);
+  router.push({ name: "Login" });
+}
 </script>
 
 <template>
-  <div class="app">
-    <nav>
-      <ul>
-        <li>
+  <v-layout class="rounded rounded-md">
+    <v-app-bar>
+      <div class="nav">
+        <div class="nav-group">
           <router-link :to="{ name: 'Landing' }">Start</router-link>
-        </li>
-        <li>
-          <router-link v-if="currentUser" :to="{ name: 'Admin' }">Admin</router-link>
-        </li>
-      </ul>
-      <ul>
-        <li>
+          <router-link v-if="currentUser" :to="{ name: 'TimeCodes' }">Administrera tidkoder</router-link>
+          <router-link v-if="currentUser" :to="{ name: 'Report' }">Rapport</router-link>
+        </div>
+        <div class="nav-group">
           <router-link v-if="!currentUser" :to="{ name: 'Login' }">Logga in</router-link>
-          <a href="#" v-else @click="signOut(auth)">Logga ut {{ currentUser.email }}</a>
-        </li>
-      </ul>
-    </nav>
-    <div class="router-view-wrapper">
+          <v-btn v-else>
+            {{ currentUser.email }}
+            <v-menu activator="parent">
+              <v-list>
+                <v-list-item @click="router.push({ name: 'User' })" theme="dark">
+                  <v-list-item-title>Användare</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="handleSignOut" theme="dark">
+                  <v-list-item-title>Logga ut</v-list-item-title>
+                </v-list-item>
+              </v-list>
+
+            </v-menu>
+
+          </v-btn>
+        </div>
+      </div>
+
+
+    </v-app-bar>
+    <v-main>
       <router-view />
-    </div>
-    
-  </div>
+    </v-main>
+  </v-layout>
 </template>
 
 <style scoped>
-ul {
-  list-style: none;
+.nav {
   display: flex;
   flex-direction: row;
-  gap: 24px;
-  margin: 8px 16px;
-  padding: 0px;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 16px;
 }
 
-nav {
-  position: fixed;
+.nav-group {
+  gap: 12px;
   display: flex;
-  flex-direction: row;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  justify-content: space-between;
+
 }
 </style>
