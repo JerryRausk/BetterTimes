@@ -1,5 +1,5 @@
+import * as admin from "firebase-admin";
 import firebaseAdmin, { ServiceAccount } from "firebase-admin";
-import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 const { cert } = firebaseAdmin.credential;
 
@@ -13,11 +13,13 @@ export async function verifyJwt(jwt: string) {
     );
   }
   try {
-    const app = initializeApp({
-      credential: cert(serviceAccountDetails as ServiceAccount),
-    });
+    if(admin.apps.length === 0) {
+      admin.initializeApp({
+        credential: cert(serviceAccountDetails as ServiceAccount),
+      });
+    }
 
-    const tokenVerificationResult = await getAuth(app).verifyIdToken(
+    const tokenVerificationResult = await getAuth().verifyIdToken(
       jwt,
       /* check if revoked */ true
     );
