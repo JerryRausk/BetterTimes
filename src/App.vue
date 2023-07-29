@@ -20,6 +20,7 @@ const handleSignOut = async () => {
         <div class="nav-group">
           <router-link :to="{ name: 'Landing' }">Start</router-link>
           <router-link v-if="currentUser" :to="{ name: 'TimeCodes' }">Administrera tidkoder</router-link>
+          <router-link v-if="currentUser" :to="{ name: 'Organization' }">Administrera organisation</router-link>
           <router-link v-if="currentUser" :to="{ name: 'Report' }">Rapport</router-link>
         </div>
         <div class="nav-group">

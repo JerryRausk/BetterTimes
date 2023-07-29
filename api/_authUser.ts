@@ -1,7 +1,6 @@
 import * as admin from "firebase-admin";
-import firebaseAdmin, { ServiceAccount } from "firebase-admin";
 import { getAuth } from "firebase-admin/auth";
-const { cert } = firebaseAdmin.credential;
+const { cert } = admin.credential;
 
 export async function verifyJwt(jwt: string) {
   if (!jwt || typeof jwt !== "string") {
@@ -15,7 +14,7 @@ export async function verifyJwt(jwt: string) {
   try {
     if(admin.apps.length === 0) {
       admin.initializeApp({
-        credential: cert(serviceAccountDetails as ServiceAccount),
+        credential: cert(serviceAccountDetails as admin.ServiceAccount),
       });
     }
 

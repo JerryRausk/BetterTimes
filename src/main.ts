@@ -4,6 +4,7 @@ import Landing from "@/views/Landing.vue";
 import Login from "@/views/Login.vue";
 import Report from "@/views/Report.vue";
 import User from "@/views/User.vue";
+import Organization from "@/views/orgAdmin/Organization.vue";
 import TimeCodes from "@/views/orgAdmin/TimeCodes.vue";
 import '@mdi/font/css/materialdesignicons.css';
 import { createPinia } from "pinia";
@@ -34,11 +35,12 @@ const vuetify = createVuetify({
 
 const routes = [
   {name: "Landing", path: "/", component: Landing},
-  {name: "TimeCodes", path: "/admin/timecodes", component: TimeCodes},
   {name: "Home", path: "/home", component: Home},
   {name: "Login", path: "/login", component: Login},
   {name: "Report", path: "/report", component: Report},
-  {name: "User", path: "/me", component: User}
+  {name: "User", path: "/me", component: User},
+  {name: "TimeCodes", path: "/admin/timecodes", component: TimeCodes},
+  {name: "Organization", path: "/admin/organization", component: Organization}
 ];
 
 const router = createRouter({

@@ -14,6 +14,9 @@ export default function handler(
   if (request.method === "POST") {
     return handlePost(request, response, prisma);
   }
+  if (request.method === "DELETE") {
+    return handleDelete(request, response, prisma);
+  }
   return response.status(400).send("Method not allowed.");
 }
 
@@ -72,8 +75,6 @@ const handlePost = async (
     return response.status(401).send("User is not authenticated.");
   }
 
-  
-
   prismaClient.user
     .findFirst({
       where: {
@@ -87,15 +88,21 @@ const handlePost = async (
         return response
           .status(404)
           .send(`User ${authResult.email} was not found.`);
-      };
-      
-      const isAuthorized = canModifyTimeCode(user.id, user.organizationId, prismaClient);
+      }
+
+      const isAuthorized = canModifyTimeCode(
+        user.id,
+        user.organizationId,
+        prismaClient
+      );
       if (!isAuthorized) {
-        console.warn(`User ${user.email} is not authorized to add or update timecodes`);
+        console.warn(
+          `User ${user.email} is not authorized to modify timecodes`
+        );
         prismaClient.$disconnect();
         return response.status(401).end();
       }
-  
+
       prismaClient.timeCode
         .upsert({
           where: {
@@ -120,6 +127,71 @@ const handlePost = async (
         })
         .catch((error) => {
           console.error("Couldn't upsert timecode to db, ", error);
+          prismaClient.$disconnect();
+          return response.status(500).end();
+        });
+    })
+    .catch((error) => {
+      console.error("Couldnt read user from db, ", error);
+      prismaClient.$disconnect();
+      return response.status(500).end();
+    });
+};
+
+const handleDelete = async (
+  request: VercelRequest,
+  response: VercelResponse,
+  prismaClient: PrismaClient
+) => {
+  const jwt = request.headers["app-id-token"];
+  if (!jwt || typeof jwt !== "string") {
+    return response.status(400).send("jwt is missing.");
+  }
+  const authResult = await verifyJwt(jwt);
+  if (!authResult.success) {
+    return response.status(401).send("User is not authenticated.");
+  }
+
+  prismaClient.user
+    .findFirst({
+      where: {
+        email: authResult.email,
+      },
+    })
+    .then((user) => {
+      if (!user) {
+        console.warn("Authed user was not found in db: ", authResult.email);
+        prismaClient.$disconnect();
+        return response
+          .status(404)
+          .send(`User ${authResult.email} was not found.`);
+      }
+
+      const isAuthorized = canModifyTimeCode(
+        user.id,
+        user.organizationId,
+        prismaClient
+      );
+      if (!isAuthorized) {
+        console.warn(
+          `User ${user.email} is not authorized to modify timecodes`
+        );
+        prismaClient.$disconnect();
+        return response.status(401).end();
+      }
+
+      prismaClient.timeCode
+        .delete({
+          where: {
+            id: request.body.id,
+          },
+        })
+        .then(() => {
+          prismaClient.$disconnect();
+          return response.status(200).end();
+        })
+        .catch((error) => {
+          console.error("Couldn't delete timecode from db, ", error);
           prismaClient.$disconnect();
           return response.status(500).end();
         });
