@@ -59,7 +59,7 @@ onUpdated(() => { dirtyState.value = { ...props } })
       <v-container v-if="isEditable" class="d-flex flex-row pa-0">
         <v-container class="d-flex flex-row pa-0" style="gap: 16px;">
           <button-with-loader color="success" text="Spara" @clicked="handleSaveEdit" :should-display-loading="isSaving"/>
-          <v-btn v-if="!isPersisted" color="error" @click="emits('deleted', props.id)">Radera</v-btn>
+          <v-btn v-if="isPersisted" color="error" @click="emits('deleted', props.id)">Radera</v-btn>
         </v-container>
         <v-btn color="warning" @click="handleAbortEdit">Avbryt</v-btn>
       </v-container>
