@@ -3,8 +3,6 @@ import ButtonWithLoader from "@/components/base/ButtonWithLoader.vue";
 import { HttpService } from "@/services/httpService";
 import { Organization } from "@prisma/client";
 import { onBeforeMount, onMounted, ref } from "vue";
-import { useCurrentUser } from "vuefire";
-const currentUser = useCurrentUser();
 onBeforeMount(() => {
   //Validate that user is logged in
 })
