@@ -22,6 +22,9 @@ export default function handler(
           data: {
             email: request.body.userEmail,
             organizationId: organization.id,
+            firstName: request.body.firstName,
+            lastName: request.body.lastName,
+            role: request.body.role
           }
         })
         .then((user) => {
