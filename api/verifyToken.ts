@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { verifyJwt } from "./_authUser";
+import { verifyJwt } from "./_firebase";
 export default async function handler(  request: VercelRequest,
   response: VercelResponse,
 ) {

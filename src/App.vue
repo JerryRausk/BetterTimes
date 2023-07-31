@@ -21,6 +21,7 @@ const handleSignOut = async () => {
           <router-link :to="{ name: 'Landing' }">Start</router-link>
           <router-link v-if="currentUser" :to="{ name: 'TimeCodes' }">Administrera tidkoder</router-link>
           <router-link v-if="currentUser" :to="{ name: 'Organization' }">Administrera organisation</router-link>
+          <router-link v-if="currentUser" :to="{ name: 'Users' }">Administrera användare</router-link>
           <router-link v-if="currentUser" :to="{ name: 'Report' }">Rapport</router-link>
         </div>
         <div class="nav-group">
@@ -46,7 +47,9 @@ const handleSignOut = async () => {
 
     </v-app-bar>
     <v-main>
-      <router-view />
+      <div class="v-col-11 v-col-sm-10 v-col-md-8 v-col-lg-7 v-col-xl-6 v-col-xxl-5 ma-auto">
+        <router-view />
+      </div>
     </v-main>
   </v-layout>
 </template>

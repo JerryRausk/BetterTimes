@@ -4,25 +4,15 @@ const { cert } = admin.credential;
 
 export async function verifyJwt(jwt: string) {
   if (!jwt || typeof jwt !== "string") {
-    return new AuthenticationResult(
-      false,
-      "jwt is missing or not a string.",
-      "",
-      ""
-    );
+    return new FirebaseResult(false, "jwt is missing or not a string.", "", "");
   }
   try {
-    if(admin.apps.length === 0) {
-      admin.initializeApp({
-        credential: cert(serviceAccountDetails as admin.ServiceAccount),
-      });
-    }
-
+    await makeSureFirebaseAppIsInitialized();
     const tokenVerificationResult = await getAuth().verifyIdToken(
       jwt,
       /* check if revoked */ true
     );
-    return new AuthenticationResult(
+    return new FirebaseResult(
       true,
       "",
       tokenVerificationResult.uid,
@@ -31,11 +21,39 @@ export async function verifyJwt(jwt: string) {
   } catch (err) {
     console.error("Something went wrong when verifying jwt.");
     console.error(err);
-    return new AuthenticationResult(false, "Internal error", "", "");
+    return new FirebaseResult(false, "Firebase error", "", "");
   }
 }
 
-export class AuthenticationResult {
+export async function createFirebaseUser(email: string, password?: string) {
+  // TODO: We should probably verify integrity of email (xx@yy.zz) before sending it to firebase. 
+  // This is already done in frontend but if this code is reached by code that doesn't validate email.
+  const emailData = { email: email, emailVerified: false };
+  const passwordData = { password: password };
+  try {
+    await makeSureFirebaseAppIsInitialized();
+    const userRecord = await getAuth().createUser(password ? { ...emailData, ...passwordData } : { ...emailData })
+    return new FirebaseResult(true, "", userRecord.uid, userRecord.email!);
+  } catch (error: any) {
+    console.error("Got error from firebase: ", error);
+    if (error.errorInfo.code === "auth/email-already-exists") {
+      console.error("Returning emailalreadyexists")
+      return new FirebaseResult(false, "EmailAlreadyExists", "", "");
+    }
+    return new FirebaseResult(false, "Firebase error", "", "");
+  }
+
+  
+}
+
+async function makeSureFirebaseAppIsInitialized() {
+  if (admin.apps.length === 0) {
+    admin.initializeApp({
+      credential: cert(serviceAccountDetails as admin.ServiceAccount),
+    });
+  }
+}
+export class FirebaseResult {
   success: boolean;
   msg: string;
   uid: string;

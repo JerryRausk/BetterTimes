@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { verifyJwt } from "./_authUser";
 import { canModifyTimeCode } from "./_authorization";
+import { verifyJwt } from "./_firebase";
 
 export default function handler(
   request: VercelRequest,
@@ -81,7 +81,7 @@ const handlePost = async (
         email: authResult.email,
       },
     })
-    .then((user) => {
+    .then(async (user) => {
       if (!user) {
         console.warn("Authed user was not found in db: ", authResult.email);
         prismaClient.$disconnect();
@@ -90,7 +90,7 @@ const handlePost = async (
           .send(`User ${authResult.email} was not found.`);
       }
 
-      const isAuthorized = canModifyTimeCode(
+      const isAuthorized = await canModifyTimeCode(
         user.id,
         user.organizationId,
         prismaClient
@@ -158,7 +158,7 @@ const handleDelete = async (
         email: authResult.email,
       },
     })
-    .then((user) => {
+    .then(async (user) => {
       if (!user) {
         console.warn("Authed user was not found in db: ", authResult.email);
         prismaClient.$disconnect();
@@ -167,7 +167,7 @@ const handleDelete = async (
           .send(`User ${authResult.email} was not found.`);
       }
 
-      const isAuthorized = canModifyTimeCode(
+      const isAuthorized = await canModifyTimeCode(
         user.id,
         user.organizationId,
         prismaClient

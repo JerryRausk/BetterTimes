@@ -6,6 +6,7 @@ import Report from "@/views/Report.vue";
 import User from "@/views/User.vue";
 import Organization from "@/views/orgAdmin/Organization.vue";
 import TimeCodes from "@/views/orgAdmin/TimeCodes.vue";
+import Users from '@/views/orgAdmin/Users.vue';
 import '@mdi/font/css/materialdesignicons.css';
 import { createPinia } from "pinia";
 import { createApp } from "vue";
@@ -40,7 +41,8 @@ const routes = [
   {name: "Report", path: "/report", component: Report},
   {name: "User", path: "/me", component: User},
   {name: "TimeCodes", path: "/admin/timecodes", component: TimeCodes},
-  {name: "Organization", path: "/admin/organization", component: Organization}
+  {name: "Organization", path: "/admin/organization", component: Organization},
+  {name: "Users", path: "/admin/users", component: Users}
 ];
 
 const router = createRouter({

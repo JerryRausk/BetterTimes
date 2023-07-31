@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { verifyJwt } from "./_authUser";
 import { canModifyOrganization } from "./_authorization";
+import { verifyJwt } from "./_firebase";
 
 export default function handler(
   request: VercelRequest,

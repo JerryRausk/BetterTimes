@@ -7,6 +7,9 @@ export async function canModifyOrganization(userId: number, organizationId: numb
   return isOrgAdmin(userId, organizationId, prismaClient);
 }
 
+export async function canAddOrganizationUser(userId: number, organizationId: number, prismaClient: PrismaClient) {
+  return isOrgAdmin(userId, organizationId, prismaClient);
+}
 
 async function isOrgAdmin(userId: number, organizationId: number, prismaClient: PrismaClient) {
   const user = await prismaClient.organizationRole.findFirst({where: {
