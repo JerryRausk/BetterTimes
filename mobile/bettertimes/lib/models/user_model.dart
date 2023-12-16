@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User extends Equatable {
   final String? id;
@@ -24,5 +25,30 @@ class User extends Equatable {
       id: id ?? this.id,
       username: username ?? this.username,
     );
+  }
+
+  static User fromSnapshot(DocumentSnapshot snap) {
+    User user = User(
+      id: snap['id'],
+      username: snap['username'],
+    );
+
+    return user;
+  }
+
+  static User fromMap(Map<String, dynamic> map) {
+    User user = User(
+      id: map['id'],
+      username: map['username'],
+    );
+
+    return user;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'username': username,
+    };
   }
 }

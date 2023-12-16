@@ -62,7 +62,7 @@ class EmailTab extends StatelessWidget {
                 ContinueOnboarding(
                   isSignup: true,
                   user: User.empty.copyWith(
-                    id: context.read<SignupCubit>().state.user!.id,
+                    id: context.read<SignupCubit>().state.user!.uid,
                   ),
                 ),
               );

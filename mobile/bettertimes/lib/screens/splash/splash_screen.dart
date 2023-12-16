@@ -22,13 +22,21 @@ class SplashScreen extends StatelessWidget {
       onWillPop: () async => false,
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          Timer(
-            Duration(seconds: 1),
-            () => Navigator.of(context).pushNamedAndRemoveUntil(
-              OnboardingScreen.routeName,
-              ModalRoute.withName('/onboarding'),
-            ),
-          );
+          if (state.status == AuthStatus.unauthenticated) {
+            Timer(
+              Duration(seconds: 1),
+              () => Navigator.of(context).pushNamedAndRemoveUntil(
+                OnboardingScreen.routeName,
+                ModalRoute.withName('/onboarding'),
+              ),
+            );
+          } else if (state.status == AuthStatus.authenticated) {
+            Timer(
+              Duration(seconds: 1),
+              () => Navigator.of(context).pushNamedAndRemoveUntil(
+                  HomeScreen.routeName, ModalRoute.withName('/')),
+            );
+          }
         },
         child: Scaffold(
           body: Container(
@@ -42,7 +50,7 @@ class SplashScreen extends StatelessWidget {
                   // ),
                   SizedBox(height: 20),
                   Text(
-                    'Better Times',
+                    'Memorize',
                     style: Theme.of(context).textTheme.headline1,
                   )
                 ],

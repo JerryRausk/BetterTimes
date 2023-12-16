@@ -1,6 +1,6 @@
-import 'package:bettertimes/models/user_model.dart';
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:form_inputs/form_inputs.dart';
 import 'package:formz/formz.dart';
 
@@ -41,9 +41,7 @@ class SignupCubit extends Cubit<SignupState> {
         email: state.email.value,
         password: state.password.value,
       );
-      emit(state.copyWith(
-        status: FormzStatus.submissionSuccess,
-      ));
+      emit(state.copyWith(status: FormzStatus.submissionSuccess, user: user));
     } catch (_) {
       emit(state.copyWith(status: FormzStatus.submissionFailure));
     }
